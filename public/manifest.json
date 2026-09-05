@@ -1,0 +1,65 @@
+{
+  "name": "DocReader",
+  "short_name": "DocReader",
+  "description": "Read, edit & convert documents on any device. Supports PDF, DOCX, TXT, Markdown, XLSX, CSV, EPUB and more.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#0f172a",
+  "background_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "share_target": {
+    "action": "/",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "files": [
+        {
+          "name": "document",
+          "accept": [
+            "application/pdf",
+            ".pdf",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            ".docx",
+            "text/plain",
+            ".txt",
+            "text/markdown",
+            ".md",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            ".xlsx",
+            "text/csv",
+            ".csv",
+            "application/epub+zip",
+            ".epub",
+            "text/html",
+            ".html",
+            ".htm",
+            "application/json",
+            ".json",
+            "application/rtf",
+            ".rtf",
+            "image/svg+xml",
+            ".svg",
+            "image/png",
+            "image/jpeg",
+            "image/webp"
+          ]
+        }
+      ]
+    }
+  }
+}

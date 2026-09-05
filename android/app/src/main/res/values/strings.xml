@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">DocReader</string>
+    <string name="title_activity_main">DocReader</string>
+    <string name="package_name">com.example.docreader</string>
+    <string name="custom_url_scheme">com.example.docreader</string>
+</resources>
