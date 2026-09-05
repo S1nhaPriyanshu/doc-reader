@@ -29,6 +29,7 @@
     "html2canvas": "^1.4.1",
     "idb-keyval": "^6.3.0",
     "jspdf": "^4.2.1",
+    "jszip": "^3.10.1",
     "mammoth": "^1.12.0",
     "markdown-it": "^14.3.0",
     "papaparse": "^5.5.4",

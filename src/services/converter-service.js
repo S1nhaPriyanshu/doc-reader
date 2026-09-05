@@ -737,6 +737,12 @@ async function textToDocx(text, baseName) {
  * @returns {Promise<{blob: Blob, fileName: string, mimeType: string}>}
  */
 async function pdfToImages(fileData, targetFormat, baseName) {
+  // Ensure the pdfjs worker is configured (covers code paths that never imported pdf-service)
+  const { GlobalWorkerOptions } = await import('pdfjs-dist');
+  if (!GlobalWorkerOptions.workerSrc) {
+    const workerMod = await import('pdfjs-dist/build/pdf.worker.min.mjs?url');
+    GlobalWorkerOptions.workerSrc = workerMod.default || workerMod;
+  }
   const pdfjsLib = await import('pdfjs-dist');
   const JSZip = (await import('jszip')).default;
 
