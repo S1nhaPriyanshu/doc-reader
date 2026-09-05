@@ -1,7 +1,13 @@
 {
   "name": "doc-reader",
-  "version": "0.0.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "Universal local-first document reader, converter, and neural OCR studio for mobile and web.",
+  "license": "MIT",
+  "author": "Priyanshu Sinha (https://github.com/S1nhaPriyanshu)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/S1nhaPriyanshu/doc-reader.git"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",

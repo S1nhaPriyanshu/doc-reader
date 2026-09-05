@@ -1,5 +1,9 @@
 # DocReader 📄⚡
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20PWA%20%7C%20Android-green.svg)](#)
+[![Privacy](https://img.shields.io/badge/Privacy-100%25%20Local--First-black.svg)](#)
+
 > **Universal Local-First Document Reader, Converter, & Neural OCR Studio**  
 > *Available as a Mobile-First PWA and Native Android App (via Capacitor).*
 
@@ -341,4 +345,10 @@ DocReader was built from the ground up on the principle of **Zero-Knowledge Arch
 
 ## 📄 License
 
-MIT License. Free and open-source for personal and commercial use.
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+
+```
+Copyright (c) 2026 Priyanshu Sinha (S1nhaPriyanshu)
+```
+
+Permission is granted to use, copy, modify, merge, publish, distribute, sublicense, and sell copies of the software with zero restrictions.
