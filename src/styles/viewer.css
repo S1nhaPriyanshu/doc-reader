@@ -15,10 +15,10 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 56px;
+  height: 52px;
   background: var(--bg-surface);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
@@ -33,13 +33,30 @@
   transform: translateY(-100%);
 }
 
-.viewer-toolbar .filename {
-  font-weight: 500;
-  font-size: var(--text-base);
+.viewer-toolbar .filename,
+.toolbar-filename {
+  font-weight: 600;
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-tight);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 50vw;
+  color: var(--text-primary);
+}
+
+.toolbar-file-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.toolbar-left,
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
 /* Document Content Area */
@@ -48,7 +65,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: smooth;
-  padding: calc(56px + var(--space-4)) var(--space-4) var(--space-16);
+  padding: calc(52px + var(--space-4)) var(--space-4) var(--space-16);
   position: relative;
   display: flex;
   flex-direction: column;

@@ -1,5 +1,5 @@
 /**
- * Home view — displays recent documents and a welcome state.
+ * Home view — modern high-craft dashboard with quick actions and recent documents.
  * @module views/home
  */
 import { getRecentDocuments, removeRecentDocument, getCachedFileData } from '../utils/storage.js';
@@ -13,85 +13,120 @@ import { formatFileSize } from '../utils/file-utils.js';
 export async function renderHome(container, app) {
   const recentDocs = await getRecentDocuments();
 
-  if (recentDocs.length === 0) {
-    container.innerHTML = renderEmptyState();
-  } else {
-    container.innerHTML = renderRecentList(recentDocs);
-  }
+  container.innerHTML = `
+    <div class="view home-view" id="home-view">
+      <!-- High-Craft Hero Header -->
+      <section class="home-hero">
+        <div class="home-hero-badge">
+          <span class="hero-pill">
+            <span class="pulse-dot"></span>
+            100% Client-Side • Zero Cloud Upload
+          </span>
+        </div>
+        <h2 class="home-hero-title">Read, Edit & Convert Any Document</h2>
+        <p class="home-hero-subtitle">
+          Next-generation document reader for mobile & web. Fast, private, and offline-ready with neural OCR.
+        </p>
+      </section>
 
-  // Bind events
+      <!-- Bento Quick Action Grid -->
+      <section class="home-bento-grid">
+        <div class="card bento-card" id="bento-open-btn" role="button" tabindex="0">
+          <div class="bento-icon-wrapper">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="12" y1="18" x2="12" y2="12"/>
+              <line x1="9" y1="15" x2="15" y2="15"/>
+            </svg>
+          </div>
+          <div class="bento-card-content">
+            <h3 class="bento-title">Open Document</h3>
+            <p class="bento-desc">Drop or browse PDF, DOCX, XLSX, EPUB, RTF, JSON, or images.</p>
+          </div>
+          <div class="bento-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <div class="card bento-card" id="bento-convert-btn" role="button" tabindex="0">
+          <div class="bento-icon-wrapper">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
+              <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
+              <line x1="4" y1="4" x2="9" y2="9"/>
+            </svg>
+          </div>
+          <div class="bento-card-content">
+            <h3 class="bento-title">Universal Converter</h3>
+            <p class="bento-desc">Convert between 11+ document, spreadsheet, and image formats.</p>
+          </div>
+          <div class="bento-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Format Capability Pills -->
+      <div class="home-formats-row">
+        <span class="badge badge-pdf">PDF</span>
+        <span class="badge badge-docx">DOCX</span>
+        <span class="badge badge-xlsx">XLSX</span>
+        <span class="badge badge-csv">CSV</span>
+        <span class="badge badge-epub">EPUB</span>
+        <span class="badge badge-md">MARKDOWN</span>
+        <span class="badge badge-html">HTML</span>
+        <span class="badge badge-json">JSON</span>
+        <span class="badge badge-rtf">RTF</span>
+        <span class="badge badge-img">OCR IMAGE</span>
+      </div>
+
+      <!-- Recent Documents Section -->
+      <section class="home-recents-section">
+        <div class="section-header-row">
+          <h3 class="section-title">Recent Documents</h3>
+          <span class="section-badge">${recentDocs.length} file${recentDocs.length !== 1 ? 's' : ''}</span>
+        </div>
+
+        ${recentDocs.length > 0 ? `
+          <div class="recent-list">
+            ${recentDocs.map((doc) => renderRecentCard(doc)).join('')}
+          </div>
+        ` : `
+          <div class="card empty-recent-card">
+            <p class="empty-recent-text">No recently opened files. Tap <strong>Open Document</strong> above to begin.</p>
+          </div>
+        `}
+      </section>
+    </div>
+  `;
+
   bindHomeEvents(container, app);
 }
 
 /**
- * Renders the empty state when no documents have been opened.
+ * Renders a single recent document card.
+ * @param {Object} doc - Document metadata.
  * @returns {string} HTML string.
  */
-function renderEmptyState() {
+function renderRecentCard(doc) {
+  const timeAgo = getRelativeTime(doc.lastOpened);
   return `
-    <div class="view home-view" id="home-view">
-      <div class="empty-state">
-        <div class="empty-state-icon">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-            <line x1="12" y1="18" x2="12" y2="12"/>
-            <line x1="9" y1="15" x2="15" y2="15"/>
-          </svg>
-        </div>
-        <h2 class="empty-state-title">No Documents Yet</h2>
-        <p class="empty-state-subtitle">Open a file to start reading, editing, or converting your documents.</p>
-        <button class="btn btn-primary" id="empty-open-btn">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-            <line x1="12" y1="18" x2="12" y2="12"/>
-            <line x1="9" y1="15" x2="15" y2="15"/>
-          </svg>
-          Open a Document
-        </button>
+    <div class="card recent-card" data-doc-id="${doc.id}" role="button" tabindex="0">
+      <div class="recent-card-icon">
+        <span class="badge badge-${doc.format}">${doc.format.toUpperCase()}</span>
       </div>
-    </div>
-  `;
-}
-
-/**
- * Renders the recent documents list.
- * @param {Array<Object>} docs - Recent document metadata.
- * @returns {string} HTML string.
- */
-function renderRecentList(docs) {
-  const cards = docs.map((doc) => {
-    const timeAgo = getRelativeTime(doc.lastOpened);
-    return `
-      <div class="card recent-card" data-doc-id="${doc.id}" role="button" tabindex="0">
-        <div class="recent-card-icon">
-          <span class="badge badge-${doc.format}">${doc.format.toUpperCase()}</span>
-        </div>
-        <div class="recent-card-info">
-          <h3 class="recent-card-name" title="${doc.name}">${doc.name}</h3>
-          <p class="recent-card-meta">
-            <span>${formatFileSize(doc.size)}</span>
-            <span class="meta-dot">·</span>
-            <span>${timeAgo}</span>
-          </p>
-        </div>
-        <button class="btn btn-icon recent-card-remove" data-remove-id="${doc.id}" aria-label="Remove from recent" title="Remove">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
+      <div class="recent-card-info">
+        <h4 class="recent-card-name" title="${doc.name}">${doc.name}</h4>
+        <p class="recent-card-meta">
+          <span>${formatFileSize(doc.size)}</span>
+          <span class="meta-dot">·</span>
+          <span>${timeAgo}</span>
+        </p>
       </div>
-    `;
-  }).join('');
-
-  return `
-    <div class="view home-view" id="home-view">
-      <div class="home-header">
-        <h2 class="section-title">Recent Documents</h2>
-        <p class="section-subtitle">${docs.length} document${docs.length !== 1 ? 's' : ''}</p>
-      </div>
-      <div class="recent-list">
-        ${cards}
-      </div>
+      <button class="btn btn-icon recent-card-remove" data-remove-id="${doc.id}" aria-label="Remove from recent" title="Remove">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
   `;
 }
@@ -102,11 +137,15 @@ function renderRecentList(docs) {
  * @param {Object} app - App controller.
  */
 function bindHomeEvents(container, app) {
-  // "Open a Document" button in empty state
-  const openBtn = container.querySelector('#empty-open-btn');
-  if (openBtn) {
-    openBtn.addEventListener('click', () => app.navigate('open'));
-  }
+  // Bento button: Open
+  container.querySelector('#bento-open-btn')?.addEventListener('click', () => {
+    app.navigate('open');
+  });
+
+  // Bento button: Convert
+  container.querySelector('#bento-convert-btn')?.addEventListener('click', () => {
+    app.navigate('open');
+  });
 
   // Recent document cards — open on click
   container.querySelectorAll('.recent-card').forEach((card) => {
@@ -138,7 +177,7 @@ function bindHomeEvents(container, app) {
 /**
  * Returns a human-readable relative time string.
  * @param {number} timestamp - Unix timestamp in ms.
- * @returns {string} Relative time (e.g. "2 hours ago").
+ * @returns {string} Relative time.
  */
 function getRelativeTime(timestamp) {
   const now = Date.now();

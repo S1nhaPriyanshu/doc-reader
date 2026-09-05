@@ -4,42 +4,98 @@
 @import './viewer.css';
 
 :root {
-  /* Color Tokens - Navy Dark Mode Default */
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --bg-tertiary: #334155;
-  --bg-surface: rgba(30, 41, 59, 0.8);
+  /* ==========================================================
+     High-Craft Neutral Design Tokens (Zinc / Slate Architecture)
+     Inspired by shadcn/ui, Origin UI, and modern developer tools
+     ========================================================== */
   
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  /* Dark Theme (Default) - Deep Zinc */
+  --bg-primary: #09090b;
+  --bg-secondary: #121215;
+  --bg-tertiary: #1c1c21;
+  --bg-surface: rgba(18, 18, 21, 0.82);
+  --bg-elevated: #242429;
   
-  --accent: #6366f1;
-  --accent-hover: #818cf8;
-  --accent-glow: rgba(99, 102, 241, 0.3);
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
   
+  /* Deliberate Accent - Crisp Monochromatic with Electric Glow */
+  --accent: #ffffff;
+  --accent-foreground: #09090b;
+  --accent-hover: #e4e4e7;
+  --accent-glow: rgba(255, 255, 255, 0.12);
+  --accent-subtle: rgba(255, 255, 255, 0.06);
+
+  /* Functional Colors */
   --success: #22c55e;
+  --success-subtle: rgba(34, 197, 94, 0.12);
   --warning: #f59e0b;
+  --warning-subtle: rgba(245, 158, 11, 0.12);
   --error: #ef4444;
+  --error-subtle: rgba(239, 68, 68, 0.12);
   
-  --border: rgba(148, 163, 184, 0.15);
-  --shadow: rgba(0, 0, 0, 0.3);
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border-strong: rgba(255, 255, 255, 0.16);
 
-  /* Format Badge Colors */
-  --pdf-color: #ef4444;
-  --docx-color: #3b82f6;
-  --txt-color: #94a3b8;
-  --xlsx-color: #22c55e;
-  --epub-color: #a855f7;
-  --img-color: #f59e0b;
-  --md-color: #06b6d4;
-  --csv-color: #14b8a6;
-  --html-color: #ea580c;
-  --json-color: #eab308;
-  --rtf-color: #8b5cf6;
-  --zip-color: #64748b;
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 14px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -2px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 32px -4px rgba(0, 0, 0, 0.6);
 
-  /* Spacing Scale */
+  /* Format Badge Color Tokens (Muted / Tinted Architecture) */
+  --pdf-color: #f87171;
+  --pdf-bg: rgba(239, 68, 68, 0.1);
+  --pdf-border: rgba(239, 68, 68, 0.22);
+
+  --docx-color: #60a5fa;
+  --docx-bg: rgba(59, 130, 246, 0.1);
+  --docx-border: rgba(59, 130, 246, 0.22);
+
+  --txt-color: #cbd5e1;
+  --txt-bg: rgba(148, 163, 184, 0.1);
+  --txt-border: rgba(148, 163, 184, 0.2);
+
+  --xlsx-color: #4ade80;
+  --xlsx-bg: rgba(34, 197, 94, 0.1);
+  --xlsx-border: rgba(34, 197, 94, 0.22);
+
+  --epub-color: #c084fc;
+  --epub-bg: rgba(168, 85, 247, 0.1);
+  --epub-border: rgba(168, 85, 247, 0.22);
+
+  --img-color: #fbbf24;
+  --img-bg: rgba(245, 158, 11, 0.1);
+  --img-border: rgba(245, 158, 11, 0.22);
+
+  --md-color: #22d3ee;
+  --md-bg: rgba(6, 182, 212, 0.1);
+  --md-border: rgba(6, 182, 212, 0.22);
+
+  --csv-color: #2dd4bf;
+  --csv-bg: rgba(20, 184, 166, 0.1);
+  --csv-border: rgba(20, 184, 166, 0.22);
+
+  --html-color: #fb923c;
+  --html-bg: rgba(249, 115, 22, 0.1);
+  --html-border: rgba(249, 115, 22, 0.22);
+
+  --json-color: #facc15;
+  --json-bg: rgba(234, 179, 8, 0.1);
+  --json-border: rgba(234, 179, 8, 0.22);
+
+  --rtf-color: #a78bfa;
+  --rtf-bg: rgba(139, 92, 246, 0.1);
+  --rtf-border: rgba(139, 92, 246, 0.22);
+
+  --zip-color: #94a3b8;
+  --zip-bg: rgba(148, 163, 184, 0.1);
+  --zip-border: rgba(148, 163, 184, 0.2);
+
+  /* Strict 4px/8px Spacing Scale */
+  --space-0: 0px;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -47,53 +103,85 @@
   --space-5: 20px;
   --space-6: 24px;
   --space-8: 32px;
+  --space-10: 40px;
   --space-12: 48px;
   --space-16: 64px;
 
   /* Border Radius */
+  --radius-xs: 4px;
   --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
   --radius-full: 9999px;
 
-  /* Typography */
-  --font-sans: 'Inter', sans-serif;
+  /* Typography Hierarchy */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
   
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-base: 1rem;     /* 16px */
+  --text-lg: 1.125rem;   /* 18px */
+  --text-xl: 1.25rem;    /* 20px */
+  --text-2xl: 1.5rem;    /* 24px */
+  --text-3xl: 1.875rem;  /* 30px */
+  --text-4xl: 2.25rem;   /* 36px */
+
+  --tracking-tight: -0.025em;
+  --tracking-tighter: -0.04em;
 
   /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-base: 250ms ease;
-  --transition-slow: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-base: 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 350ms cubic-bezier(0.16, 1, 0.3, 1);
 
   /* Z-index layers */
   --z-base: 1;
-  --z-dropdown: 10;
-  --z-sticky: 20;
+  --z-dropdown: 20;
+  --z-sticky: 30;
   --z-modal: 50;
   --z-toast: 100;
 }
 
+/* Light Theme - Clean White / Slate */
 [data-theme="light"] {
-  --bg-primary: #f8fafc;
-  --bg-secondary: #f1f5f9;
-  --bg-tertiary: #e2e8f0;
-  --bg-surface: rgba(255, 255, 255, 0.8);
+  --bg-primary: #ffffff;
+  --bg-secondary: #fafafa;
+  --bg-tertiary: #f4f4f5;
+  --bg-surface: rgba(255, 255, 255, 0.88);
+  --bg-elevated: #f4f4f5;
   
-  --text-primary: #0f172a;
-  --text-secondary: #334155;
-  --text-muted: #64748b;
+  --text-primary: #09090b;
+  --text-secondary: #52525b;
+  --text-muted: #a1a1aa;
   
-  --border: rgba(15, 23, 42, 0.1);
-  --shadow: rgba(0, 0, 0, 0.08);
+  --accent: #09090b;
+  --accent-foreground: #ffffff;
+  --accent-hover: #27272a;
+  --accent-glow: rgba(0, 0, 0, 0.08);
+  --accent-subtle: rgba(0, 0, 0, 0.04);
+  
+  --border: rgba(0, 0, 0, 0.08);
+  --border-subtle: rgba(0, 0, 0, 0.04);
+  --border-strong: rgba(0, 0, 0, 0.16);
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.12);
+
+  --pdf-color: #dc2626;
+  --docx-color: #2563eb;
+  --txt-color: #475569;
+  --xlsx-color: #16a34a;
+  --epub-color: #9333ea;
+  --img-color: #d97706;
+  --md-color: #0891b2;
+  --csv-color: #0d9488;
+  --html-color: #ea580c;
+  --json-color: #ca8a04;
+  --rtf-color: #7c3aed;
+  --zip-color: #475569;
 }
 
 /* Reset */
@@ -112,19 +200,21 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  letter-spacing: -0.01em;
   transition: background-color var(--transition-base), color var(--transition-base);
 }
 
 /* Selection Styles */
 ::selection {
-  background-color: var(--accent);
-  color: #fff;
+  background-color: var(--text-primary);
+  color: var(--bg-primary);
 }
 
 /* Scrollbar Styling */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
