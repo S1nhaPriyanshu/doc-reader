@@ -35,6 +35,10 @@ export default defineConfig({
       },
     }),
   ],
+  test: {
+    environment: 'jsdom',
+    exclude: ['**/node_modules/**', '**/tests/app.spec.js', '**/tests/e2e/**', '**/.{idea,git,cache,output,temp}/**'],
+  },
   build: {
     target: 'es2020',
     rollupOptions: {

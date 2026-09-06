@@ -6,15 +6,30 @@
 const THEME_KEY = 'docreader-theme';
 
 /**
+ * Applies the theme to the DOM and UI elements without modifying localStorage.
+ * @param {'dark'|'light'} theme - Theme to apply.
+ */
+export function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  updateThemeIcon(theme);
+
+  // Update meta theme-color for browser chrome
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) {
+    meta.setAttribute('content', theme === 'dark' ? '#0f172a' : '#f8fafc');
+  }
+}
+
+/**
  * Initialises the theme from localStorage or system preference.
  */
 export function initTheme() {
   const saved = localStorage.getItem(THEME_KEY);
   if (saved) {
-    setTheme(saved);
+    applyTheme(saved);
   } else {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setTheme(prefersDark ? 'dark' : 'light');
+    applyTheme(prefersDark ? 'dark' : 'light');
   }
 
   const btn = document.getElementById('btn-theme');
@@ -25,7 +40,7 @@ export function initTheme() {
   // Listen for system changes
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
     if (!localStorage.getItem(THEME_KEY)) {
-      setTheme(e.matches ? 'dark' : 'light');
+      applyTheme(e.matches ? 'dark' : 'light');
     }
   });
 }
@@ -35,15 +50,8 @@ export function initTheme() {
  * @param {'dark'|'light'} theme - Theme to apply.
  */
 export function setTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme);
+  applyTheme(theme);
   localStorage.setItem(THEME_KEY, theme);
-  updateThemeIcon(theme);
-
-  // Update meta theme-color for browser chrome
-  const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) {
-    meta.setAttribute('content', theme === 'dark' ? '#0f172a' : '#f8fafc');
-  }
 }
 
 /**

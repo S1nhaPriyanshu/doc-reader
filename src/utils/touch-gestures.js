@@ -28,7 +28,7 @@ export function initPinchZoom(element) {
       // Clamp zoom
       newZoom = Math.max(minZoom, Math.min(newZoom, maxZoom));
       
-      element.style.transform = \`scale(\${newZoom})\`;
+      element.style.transform = `scale(${newZoom})`;
       element.style.transformOrigin = 'center center';
     }
   }, { passive: false });
@@ -38,7 +38,7 @@ export function initPinchZoom(element) {
       // Re-calculate the actual applied zoom after pinch ends
       const transform = element.style.transform;
       if (transform) {
-        const match = transform.match(/scale\\(([^)]+)\\)/);
+        const match = transform.match(/scale\(([^)]+)\)/);
         if (match) {
           currentZoom = parseFloat(match[1]);
           // Snap back to 1.0 if close to it

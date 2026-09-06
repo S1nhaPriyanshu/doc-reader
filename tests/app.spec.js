@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 test.describe('DocReader Mobile App Tests', () => {
   
@@ -22,7 +25,7 @@ test.describe('DocReader Mobile App Tests', () => {
     
     // Navigate to Open tab
     await navItems.nth(1).click();
-    await expect(page.locator('.drop-zone-title')).toHaveText('Open Document');
+    await expect(page.locator('.section-title')).toHaveText('Open Document');
   });
 
   test('should open a text file and switch to viewer mode', async ({ page }) => {
