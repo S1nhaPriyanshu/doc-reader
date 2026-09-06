@@ -75,11 +75,12 @@
 /* PDF Pages */
 .pdf-page {
   position: relative;
-  background: #fff;
+  background: #ffffff;
   border-radius: var(--radius-sm);
   box-shadow: 0 8px 24px var(--shadow);
   margin-bottom: var(--space-6);
   max-width: 100%;
+  flex-shrink: 0;
 }
 
 .annotation-layer {

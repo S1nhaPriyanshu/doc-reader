@@ -3,6 +3,9 @@ import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
 
+import { cloneBuffer } from '../utils/file-utils.js';
+export { cloneBuffer };
+
 /**
  * Renders a PDF document into a container.
  * @param {ArrayBuffer} fileData - The PDF file data.
@@ -12,54 +15,106 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
  */
 export async function renderPdf(fileData, container, docMeta) {
   try {
-    const loadingTask = pdfjsLib.getDocument({ data: fileData });
+    const loadingTask = pdfjsLib.getDocument({ data: cloneBuffer(fileData) });
     const pdfDoc = await loadingTask.promise;
-    
+
     const viewer = document.createElement('div');
     viewer.className = 'pdf-viewer';
-    viewer.style.overflow = 'auto';
-    viewer.style.height = '100%';
-    
+
     const pageCount = pdfDoc.numPages;
-    const containerWidth = container.clientWidth || window.innerWidth;
-    
-    for (let pageNum = 1; pageNum <= pageCount; pageNum++) {
+    const padding = 32;
+    const rawWidth = container.clientWidth || window.innerWidth || 800;
+    const containerWidth = Math.max(280, rawWidth - padding);
+
+    // Clear initial loading skeleton and mount viewer immediately
+    container.innerHTML = '';
+    container.appendChild(viewer);
+
+    // Helper to render a specific page onto its canvas
+    const renderPageContent = async (pageNum, pageContainer) => {
+      if (pageContainer.dataset.rendered === 'true') return;
+      pageContainer.dataset.rendered = 'true';
+
       const page = await pdfDoc.getPage(pageNum);
       const unscaledViewport = page.getViewport({ scale: 1 });
       const scale = containerWidth / unscaledViewport.width;
       const viewport = page.getViewport({ scale: scale > 0 ? scale : 1 });
-      
-      const pageContainer = document.createElement('div');
-      pageContainer.className = 'pdf-page';
-      pageContainer.style.marginBottom = '20px';
-      pageContainer.style.position = 'relative';
-      
+
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
       canvas.height = viewport.height;
       canvas.width = viewport.width;
-      
+
+      // Fill background with white paper color before rendering PDF vectors
+      if (context) {
+        context.fillStyle = '#ffffff';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
       const renderContext = {
         canvasContext: context,
-        viewport: viewport
+        viewport: viewport,
       };
-      
+
       await page.render(renderContext).promise;
-      
-      const label = document.createElement('div');
-      label.textContent = `Page ${pageNum}`;
-      label.style.textAlign = 'center';
-      label.style.marginTop = '5px';
-      label.style.fontSize = '12px';
-      
-      pageContainer.appendChild(canvas);
-      pageContainer.appendChild(label);
-      viewer.appendChild(pageContainer);
+
+      const placeholder = pageContainer.querySelector('.pdf-page-placeholder');
+      if (placeholder) placeholder.remove();
+
+      pageContainer.insertBefore(canvas, pageContainer.firstChild);
+    };
+
+    const initialPagesCount = Math.min(pageCount, 5);
+    const hasIntersectionObserver = typeof window !== 'undefined' && 'IntersectionObserver' in window;
+
+    let observer = null;
+    if (hasIntersectionObserver && pageCount > initialPagesCount) {
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const target = entry.target;
+            const pNum = parseInt(target.dataset.pageNum, 10);
+            if (pNum) {
+              renderPageContent(pNum, target);
+              observer.unobserve(target);
+            }
+          }
+        });
+      }, { rootMargin: '600px' });
     }
-    
-    container.innerHTML = '';
-    container.appendChild(viewer);
-    
+
+    for (let pageNum = 1; pageNum <= pageCount; pageNum++) {
+      const pageContainer = document.createElement('div');
+      pageContainer.className = 'pdf-page';
+      pageContainer.dataset.pageNum = String(pageNum);
+      pageContainer.style.marginBottom = '20px';
+      pageContainer.style.position = 'relative';
+
+      const label = document.createElement('div');
+      label.className = 'pdf-page-label';
+      label.textContent = `Page ${pageNum}`;
+      pageContainer.appendChild(label);
+
+      viewer.appendChild(pageContainer);
+
+      if (pageNum <= initialPagesCount || !observer) {
+        await renderPageContent(pageNum, pageContainer);
+      } else {
+        const placeholder = document.createElement('div');
+        placeholder.className = 'pdf-page-placeholder';
+        placeholder.style.height = '400px';
+        placeholder.style.display = 'flex';
+        placeholder.style.alignItems = 'center';
+        placeholder.style.justifyContent = 'center';
+        placeholder.style.color = 'var(--text-muted, #94a3b8)';
+        placeholder.style.fontSize = '12px';
+        placeholder.textContent = `Loading Page ${pageNum}...`;
+        pageContainer.insertBefore(placeholder, label);
+
+        observer.observe(pageContainer);
+      }
+    }
+
     return { type: 'pdf', content: pdfDoc, editable: false, pageCount };
   } catch (error) {
     console.error('Error rendering PDF:', error);
@@ -74,7 +129,7 @@ export async function renderPdf(fileData, container, docMeta) {
  */
 export async function extractPdfText(fileData) {
   try {
-    const loadingTask = pdfjsLib.getDocument({ data: fileData });
+    const loadingTask = pdfjsLib.getDocument({ data: cloneBuffer(fileData) });
     const pdfDoc = await loadingTask.promise;
     const pageCount = pdfDoc.numPages;
     let fullText = '';
@@ -105,7 +160,7 @@ export async function ocrPdfDocument(fileData, language = 'eng', onProgress = nu
     const { createWorker } = await import('tesseract.js');
     const { preprocessImage } = await import('../utils/image-preprocessor.js');
 
-    const loadingTask = pdfjsLib.getDocument({ data: fileData });
+    const loadingTask = pdfjsLib.getDocument({ data: cloneBuffer(fileData) });
     const pdfDoc = await loadingTask.promise;
     const pageCount = pdfDoc.numPages;
 

@@ -12,6 +12,7 @@ import {
   validateFileSize,
   readFileAsArrayBuffer,
   readFileAsText,
+  cloneBuffer,
 } from '../../src/utils/file-utils.js';
 
 // ---------------------------------------------------------------------------
@@ -740,3 +741,34 @@ describe('readFileAsText', () => {
     expect(result).toBe(content);
   });
 });
+
+describe('cloneBuffer', () => {
+  it('returns falsy input unchanged', () => {
+    expect(cloneBuffer(null)).toBeNull();
+    expect(cloneBuffer(undefined)).toBeUndefined();
+  });
+
+  it('clones an ArrayBuffer into an independent buffer', () => {
+    const orig = new Uint8Array([1, 2, 3, 4]).buffer;
+    const clone = cloneBuffer(orig);
+
+    expect(clone).toBeInstanceOf(ArrayBuffer);
+    expect(clone).not.toBe(orig);
+    expect(new Uint8Array(clone)).toEqual(new Uint8Array([1, 2, 3, 4]));
+
+    // Modifying clone does not alter original
+    const viewClone = new Uint8Array(clone);
+    viewClone[0] = 99;
+    expect(new Uint8Array(orig)[0]).toBe(1);
+  });
+
+  it('clones a TypedArray view and preserves content', () => {
+    const raw = new Uint8Array([10, 20, 30, 40, 50]);
+    const subView = raw.subarray(1, 4); // [20, 30, 40]
+    const clone = cloneBuffer(subView);
+
+    expect(clone).toBeInstanceOf(ArrayBuffer);
+    expect(new Uint8Array(clone)).toEqual(new Uint8Array([20, 30, 40]));
+  });
+});
+

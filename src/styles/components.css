@@ -1086,17 +1086,21 @@
 }
 
 .pdf-page {
+  position: relative;
+  background: #ffffff;
   max-width: 100%;
   margin-bottom: var(--space-6);
   border-radius: var(--radius-sm);
   overflow: hidden;
   box-shadow: 0 4px 16px var(--shadow);
+  flex-shrink: 0;
 }
 
 .pdf-page canvas {
   display: block;
   max-width: 100%;
   height: auto;
+  background: #ffffff;
 }
 
 .pdf-page-label {

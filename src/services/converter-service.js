@@ -745,8 +745,8 @@ async function pdfToImages(fileData, targetFormat, baseName) {
   }
   const pdfjsLib = await import('pdfjs-dist');
   const JSZip = (await import('jszip')).default;
-
-  const loadingTask = pdfjsLib.getDocument({ data: fileData });
+  const { cloneBuffer } = await import('../utils/file-utils.js');
+  const loadingTask = pdfjsLib.getDocument({ data: cloneBuffer(fileData) });
   const pdfDoc = await loadingTask.promise;
   const numPages = pdfDoc.numPages;
 

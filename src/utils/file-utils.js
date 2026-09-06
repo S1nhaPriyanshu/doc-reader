@@ -141,3 +141,21 @@ export function readFileAsText(file) {
     reader.readAsText(file);
   });
 }
+
+/**
+ * Safely clones an ArrayBuffer or TypedArray view to prevent buffer detachment
+ * when transferring data to Web Workers.
+ * @param {ArrayBuffer|ArrayBufferView} buffer - Binary document buffer.
+ * @returns {ArrayBuffer} Independent buffer clone.
+ */
+export function cloneBuffer(buffer) {
+  if (!buffer) return buffer;
+  if (buffer instanceof ArrayBuffer) {
+    return buffer.slice(0);
+  }
+  if (ArrayBuffer.isView(buffer)) {
+    return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
+  }
+  return buffer;
+}
+
